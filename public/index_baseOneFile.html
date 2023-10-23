@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Compiled and minified CSS -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        />
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+        />
+
+        <style>
+            .nav-wrapper {
+                padding: 0 2rem;
+            }
+
+            .order-done {
+                text-decoration: line-through;
+            }
+
+            .task {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .task label {
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+            }
+
+            .task-details {
+                margin: 0;
+                flex: 1;
+            }
+
+            .task-details p {
+                margin: 1px 0;
+            }
+
+            .btn {
+                flex: 0 0 auto;
+            }
+        </style>
+        <title>Список дел</title>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Список дел</a>
+
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <!-- <li><a href="/">Главная</a></li> -->
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <div style="padding-top: 0.5rem" class="col s12 m6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span id="card-title" class="card-title"
+                            >Загрузка ...</span
+                        >
+                        <p
+                            id="card-count"
+                            class="right-align"
+                            style="font-size: small"
+                        >
+                            0 задач
+                        </p>
+                        <div class="row">
+                            <form
+                                style="padding-left: 2rem; padding-right: 2rem"
+                                class=""
+                            >
+                                <div class="input-field">
+                                    <!-- <i class="material-icons prefix"></i> -->
+                                    <input
+                                        placeholder="Введите название задачи"
+                                        id="order_name"
+                                        type="text"
+                                        style="color: white"
+                                    />
+                                    <label
+                                        style="color: white; font-size: larger"
+                                        id="label_order_name"
+                                        for="order_name"
+                                    ></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-action white-text">
+                        <p id="orders-title">У Вас 0 задач, добавьте новую</p>
+                        <div id="app">
+                            <!-- Этот блок будет использоваться для вывода списка задач -->
+                            <div id="task-list"></div>
+                            <br />
+                            <!-- Конец блока вывода списка задач -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        function capitalize(value) {
+            return value.toString().charAt(0).toUpperCase() + value.slice(1)
+        }
+
+        function date() {
+            return new Intl.DateTimeFormat('ru-RU', {
+                year: 'numeric',
+                month: 'long',
+                day: '2-digit',
+            }).format(new Date())
+        }
+
+        function pluralizeTasks(count) {
+            if (count === 1) {
+                return 'задача'
+            } else if (count >= 2 && count <= 4) {
+                return 'задачи'
+            } else {
+                return 'задач'
+            }
+        }
+
+        function addTodo(title) {
+            const order_title = title.trim()
+            if (!order_title) {
+                return
+            }
+            this.todos.push({
+                title: order_title,
+                id: Math.random(),
+                done: false,
+                date: new Date(),
+            })
+        }
+
+        function removeTodo(id) {
+            this.todos = this.todos.filter(
+                (t) => t.id.toString() !== id.toString()
+            )
+        }
+
+        // ------------------------------------------------
+
+        function updateTaskList(todos) {
+            // Длина массива задач
+            const todosLenght = state.todos.length
+
+            const cardCountElement = document.getElementById('card-count')
+            cardCountElement.textContent = `${todosLenght} ${pluralizeTasks(
+                todosLenght
+            )}`
+
+            const ordersTitleElement = document.getElementById('orders-title')
+            if (todosLenght) {
+                ordersTitleElement.textContent = 'Ваши задачи:'
+            } else {
+                ordersTitleElement.textContent = 'У Вас 0 задач, добавьте новую'
+            }
+
+            // Берем элемент, куда будем закидывать задачи
+            const taskListElement = document.getElementById('task-list')
+            // Очищаем предыдущий список задач
+            taskListElement.innerHTML = ''
+
+            // Перебираем задачи в объекте state.todos и добавляем их на страницу
+            todos.forEach((todo, index) => {
+                const taskElement = document.createElement('div')
+                // Генерируем уникальный ID для каждого чекбокса
+                const checkboxId = `checkbox-${index}`
+                const buttonDeleteId = `btn-delete-${index}`
+
+                taskElement.innerHTML = `
+            <div class="task">
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filled-in"
+                        ${todo.done ? 'checked="checked"' : ''}
+                        id="${checkboxId}"
+                    />
+                    <span></span>
+                </label>
+
+                <div class="task-details">
+                    <p 
+                        class="${todo.done ? 'order-done' : ''}"
+                        style="font-size: 16px"
+                        >
+                            ${todo.title}
+                    </p>
+                    <p 
+                        class="task-date" 
+                        style="font-size: 10px"
+                        > 
+                            Добавлено в: ${date(todo.date)}
+                    </p>
+                </div>
+
+                <button 
+                    class="btn-floating btn waves-effect waves-light blue-grey darken-3"
+                    name="delete" 
+                    data-todo-id="${todo.id}"
+                    id="${buttonDeleteId}"
+                    >
+                        <i class="material-icons">close</i>
+                </button>
+            </div>
+            
+            <br>
+        `
+                // Добавляем сформированный <div> элемент в список задач
+                taskListElement.appendChild(taskElement)
+
+                // Добавляем слушатель событий для чекбокса
+                const checkbox = document.getElementById(checkboxId)
+                checkbox.addEventListener('change', (event) => {
+                    // Обновляем значение todo.done в соответствии с состоянием чекбокса
+                    todo.done = event.target.checked
+                    // Вызываем функцию обновления списка задач после изменения
+                    updateTaskList(state.todos)
+                })
+
+                // Добавляем слушатель событий для кнопки удалить
+                const deleteButton = document.getElementById(buttonDeleteId)
+                deleteButton.addEventListener('click', function () {
+                    // Берем индекс задачи, которую надо удалить
+                    const todoId = this.getAttribute('data-todo-id')
+                    // Вызываем метод "removeTodo" передавая контекст "state" и значение для метода "todoId"
+                    removeTodo.call(state, todoId)
+
+                    // Обновляем таблицу
+                    updateTaskList(state.todos)
+                })
+            })
+        }
+
+        const state = {
+            show: true,
+            todos: [],
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const cardTitle = document.getElementById('card-title')
+            cardTitle.textContent = date()
+
+            const orderNameInput = document.getElementById('order_name')
+            const labelOrderName = document.getElementById('label_order_name')
+
+            orderNameInput.addEventListener('input', function () {
+                if (orderNameInput.value) {
+                    labelOrderName.textContent = 'Задача:'
+                } else {
+                    labelOrderName.textContent = ''
+                }
+            })
+
+            // Найдите вашу форму по селектору
+            const form = document.querySelector('form')
+            form.addEventListener('submit', function (event) {
+                // Предотвращаем стандартное действие отправки формы
+                event.preventDefault()
+
+                // Здесь можно выполнить ваш код для добавления задачи (addTodo)
+                addTodo.call(state, capitalize(orderNameInput.value))
+
+                // Очищаем поле ввода
+                orderNameInput.value = ''
+                // Восстанавливаем текст label
+                labelOrderName.textContent = ''
+
+                // Обновляем содержимое элемента "task-list" на странице
+                updateTaskList(state.todos)
+            })
+        })
+    </script>
+</html>

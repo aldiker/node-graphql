@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Compiled and minified CSS -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        />
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+        />
+
+        <link rel="stylesheet" href="/style/index.css" />
+        <title>Список дел</title>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Список дел</a>
+
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <!-- <li><a href="/">Главная</a></li> -->
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <div style="padding-top: 0.5rem" class="col s12 m6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span id="card-title" class="card-title"
+                            >Загрузка ...</span
+                        >
+                        <p
+                            id="card-count"
+                            class="right-align"
+                            style="font-size: small"
+                        >
+                            <!-- 0 задач -->
+                            ...
+                        </p>
+                        <div class="row">
+                            <form
+                                style="padding-left: 2rem; padding-right: 2rem"
+                                class=""
+                            >
+                                <div class="input-field">
+                                    <!-- <i class="material-icons prefix"></i> -->
+                                    <input
+                                        placeholder="Введите название задачи"
+                                        id="order_name"
+                                        type="text"
+                                        style="color: white"
+                                    />
+                                    <label
+                                        style="color: white; font-size: larger"
+                                        id="label_order_name"
+                                        for="order_name"
+                                    ></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-action white-text">
+                        <p id="orders-title">
+                            <!-- У Вас 0 задач, добавьте новую -->
+                            ...
+                        </p>
+                        <div id="app">
+                            <!-- Этот блок будет использоваться для вывода списка задач -->
+                            <div id="task-list"></div>
+                            <br />
+                            <!-- Конец блока вывода списка задач -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="module" src="/scripts/app.js"></script>
+</html>
