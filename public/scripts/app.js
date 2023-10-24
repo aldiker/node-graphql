@@ -136,16 +136,39 @@ function updateTaskList(todos) {
 // Запускаем обработчик события, когда загрузилось полностью DOM
 document.addEventListener('DOMContentLoaded', function () {
     // Получаем данные с БД через API GET-запрос
-    fetch('/api/todo', {
-        method: 'get',
+    // fetch('/api/todo', {
+    //     method: 'get',
+    // })
+    //     .then((res) => res.json())
+    //     .then((todos) => {
+    //         console.log(todos)
+    //         state.todos = todos
+    //         updateTaskList(state.todos)
+    //     })
+    //     .catch((e) => console.log(e))
+
+    // Получаем данные с БД через API GET-запрос
+    const query = `
+        query {
+            getTodos {
+                id title done createdAt updatedAt
+            }
+        }
+    `
+    fetch('/graphql', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({ query }),
     })
         .then((res) => res.json())
-        .then((todos) => {
-            console.log(todos)
-            state.todos = todos
+        .then((response) => {
+            console.log(response)
+            state.todos = response.data.getTodos
             updateTaskList(state.todos)
         })
-        .catch((e) => console.log(e))
 
     const cardTitle = document.getElementById('card-title')
     cardTitle.textContent = date()

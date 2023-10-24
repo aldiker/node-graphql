@@ -3,12 +3,13 @@ export function capitalize(value) {
 }
 
 export function date(inputDate = new Date(), withTime = false) {
-    const inputDateToDate = new Date(inputDate)
+    const inputDateToDate = new Date(+inputDate)
     const options = {
         year: 'numeric',
         month: 'long',
         day: '2-digit',
     }
+    // добавляем поля форматирования если нужно показывать время
     if (withTime) {
         options.hour = '2-digit'
         options.minute = '2-digit'
