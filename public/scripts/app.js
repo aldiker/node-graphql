@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //     })
     //     .catch((e) => console.log(e))
 
-    // Получаем данные с БД через API GET-запрос
+    // Получаем данные с БД через GraphQL-запрос
     const query = `
         query {
             getTodos {
