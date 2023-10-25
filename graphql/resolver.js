@@ -36,4 +36,16 @@ module.exports = {
             console.log(e)
         }
     },
+    async createTodo({ todo }) {
+        try {
+            const todoToCreate = {
+                title: todo.title,
+                done: false,
+            }
+            return await Todo.create(todoToCreate)
+        } catch (error) {
+            console.log(error)
+            throw new Error('createTodo Error')
+        }
+    },
 }

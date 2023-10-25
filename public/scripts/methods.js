@@ -4,15 +4,26 @@ export function addTodo(title, successCallback) {
         return
     }
 
-    fetch('/api/todo', {
+    // Создаем новую запись в БД через GraphQL-запрос
+    const query = `
+        mutation {
+            createTodo (todo: {title: "${order_title}"}) {
+                id title done createdAt updatedAt
+            }
+        }
+    `
+    fetch('/graphql', {
         method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: order_title }),
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({ query }),
     })
         .then((res) => res.json())
-        .then(({ todo }) => {
-            console.log(todo)
-            this.todos.push(todo)
+        .then((response) => {
+            console.log(response)
+            this.todos.push(response.data.createTodo)
             successCallback()
         })
         .catch((e) => console.log(e))
