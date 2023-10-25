@@ -48,4 +48,15 @@ module.exports = {
             throw new Error('createTodo Error')
         }
     },
+    async completeTodo({ todo: { id, done } }) {
+        try {
+            const todoToChange = await Todo.findByPk(+id)
+            todoToChange.done = done
+            await todoToChange.save()
+            return todoToChange
+        } catch (error) {
+            console.log(error)
+            throw new Error('completeTodo Error')
+        }
+    },
 }

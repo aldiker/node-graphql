@@ -50,15 +50,27 @@ export function removeTodo(id, successCallback) {
 export function completeTodo(id, done, successCallback) {
     console.log(`! - completeTodo: id = ${id}`)
 
-    fetch('/api/todo/' + id, {
-        method: 'put',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ done: done }),
+    // Изменяем запись в БД через GraphQL-запрос
+    const query = `
+        mutation {
+            completeTodo (todo: {id: ${id}, done: ${done}}) {
+                id createdAt updatedAt
+            }
+        }
+    `
+
+    fetch('/graphql', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({ query }),
     })
         .then((res) => res.json())
-        .then(({ todo }) => {
-            console.log(todo)
-            successCallback(todo)
+        .then((response) => {
+            console.log(response)
+            successCallback(response.data.completeTodo)
         })
         .catch((e) => console.log(e))
 }
