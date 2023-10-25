@@ -29,24 +29,6 @@ export function addTodo(title, successCallback) {
         .catch((e) => console.log(e))
 }
 
-export function removeTodo(id, successCallback) {
-    console.log(`! - removeTodo: id = ${id}`)
-
-    // Вызываем API DELETE
-    fetch('/api/todo/' + id, {
-        method: 'delete',
-    })
-        .then(() => {
-            console.log(`! - removeTodo: fetch.then`)
-            // Удаляем элемент из внутренней таблицы "state.todos"
-            this.todos = this.todos.filter(
-                (t) => t.id.toString() !== id.toString()
-            )
-            successCallback()
-        })
-        .catch((e) => console.log(e))
-}
-
 export function completeTodo(id, done, successCallback) {
     console.log(`! - completeTodo: id = ${id}`)
 
@@ -71,6 +53,35 @@ export function completeTodo(id, done, successCallback) {
         .then((response) => {
             console.log(response)
             successCallback(response.data.completeTodo)
+        })
+        .catch((e) => console.log(e))
+}
+
+export function removeTodo(id, successCallback) {
+    console.log(`! - removeTodo: id = ${id}`)
+
+    // Удаляем запись в БД через GraphQL-запрос
+    const query = `
+        mutation {
+            removeTodo (id: ${id})
+        }
+    `
+    fetch('/graphql', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({ query }),
+    })
+        .then(() => {
+            console.log(`! - removeTodo: fetch.then`)
+
+            // Удаляем элемент из внутренней таблицы "state.todos"
+            this.todos = this.todos.filter(
+                (t) => t.id.toString() !== id.toString()
+            )
+            successCallback()
         })
         .catch((e) => console.log(e))
 }

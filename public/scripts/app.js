@@ -135,18 +135,6 @@ function updateTaskList(todos) {
 
 // Запускаем обработчик события, когда загрузилось полностью DOM
 document.addEventListener('DOMContentLoaded', function () {
-    // Получаем данные с БД через API GET-запрос
-    // fetch('/api/todo', {
-    //     method: 'get',
-    // })
-    //     .then((res) => res.json())
-    //     .then((todos) => {
-    //         console.log(todos)
-    //         state.todos = todos
-    //         updateTaskList(state.todos)
-    //     })
-    //     .catch((e) => console.log(e))
-
     // Получаем данные с БД через GraphQL-запрос
     const query = `
         query {

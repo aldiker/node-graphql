@@ -45,5 +45,6 @@ module.exports = buildSchema(`
         addTestUser(user: UserType!): User!
         createTodo(todo: TodoInput!): Todo!
         completeTodo(todo: completeTodoInput!): Todo!
+        removeTodo(id: ID!): Boolean!
     }
 `)

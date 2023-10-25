@@ -59,4 +59,14 @@ module.exports = {
             throw new Error('completeTodo Error')
         }
     },
+    async removeTodo({ id }) {
+        try {
+            const todoToRemove = await Todo.findByPk(+id)
+            await todoToRemove.destroy()
+            return true
+        } catch (error) {
+            console.log(error)
+            throw new Error('removeTodo Error')
+        }
+    },
 }
